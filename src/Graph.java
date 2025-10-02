@@ -95,6 +95,36 @@ public class Graph {
         return adj[v].size();
     }
 
+    //Necessário para a classe Fleury:
+
+    public void removeEdge(int v, int w) {
+    Bag<Integer> vAdj = new Bag<>();
+    boolean removedV = false;
+    for (int neighbor : adj[v]) {
+        if (neighbor == w && !removedV) {
+            removedV = true;
+        } else {
+            vAdj.add(neighbor);
+        }
+    }
+    adj[v] = vAdj;
+
+    Bag<Integer> wAdj = new Bag<>();
+    boolean removedW = false;
+    for (int neighbor : adj[w]) {
+        if (neighbor == v && !removedW) {
+            removedW = true;
+        } else {
+            wAdj.add(neighbor);
+        }
+    }
+    adj[w] = wAdj;
+    
+    if (removedV && removedW) {
+        E--;
+    }
+}
+
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append(V + " vertices, " + E + " edges " + NEWLINE);
