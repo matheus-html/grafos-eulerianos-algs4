@@ -1,7 +1,7 @@
 Algoritmo de Hierholzer
-Complexidade de Tempo: O(V+E) (Linear e muito eficiente).
+Complexidade de Tempo: O(E) (Linear e muito eficiente).
 
-Complexidade de Espaço: O(V+E).
+Complexidade de Espaço: O(V).
 
 Algoritmo de Fleury
 Complexidade de Tempo: O(E⋅(V+E)) (Polinomial e ineficiente, devido à verificação de pontes a cada passo).
