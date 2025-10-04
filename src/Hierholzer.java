@@ -1,7 +1,6 @@
 package src;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class Hierholzer extends CircuitoEuleriano {
 
@@ -13,9 +12,11 @@ public class Hierholzer extends CircuitoEuleriano {
         }
         
         HashSet<Integer>[] adjSets = (HashSet<Integer>[]) new HashSet[G.V()];
+
         for (int v = 0; v < G.V(); v++) {
             adjSets[v] = new HashSet<Integer>();
         }
+
         for (int v = 0; v < G.V(); v++) {
             for (int w : G.adj(v)) {
                 adjSets[v].add(w);
