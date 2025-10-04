@@ -3,7 +3,7 @@ package src;
 public abstract class CircuitoEuleriano {
 
     private Stack<Integer> circuito;
-    private final String erro;
+    private String erro;
 
     protected CircuitoEuleriano(Graph G) {
         if (G.E() == 0) {
