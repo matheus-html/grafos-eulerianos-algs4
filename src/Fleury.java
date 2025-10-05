@@ -1,7 +1,10 @@
 package src;
 
+import java.util.Iterator;
+
 public class Fleury extends CircuitoEuleriano {
 
+    
     public Fleury(Graph G) {
         super(G);
 
@@ -19,54 +22,58 @@ public class Fleury extends CircuitoEuleriano {
             }
         }
 
-        Stack<Integer> circuitoFinal = new Stack<>();
         if (verticeInicial == -1) {
-            super.definirCircuito(circuitoFinal);
+            super.definirCircuito(new Stack<Integer>()); 
             return;
         }
 
+        Stack<Integer> circuitoFinal = new Stack<>();
         int u = verticeInicial;
         circuitoFinal.push(u);
 
         while (tempG.E() > 0) {
-            int proximoVertice = -1;
+            int vSelecionado = -1;
+            Iterator<Integer> it = tempG.adj(u).iterator();
 
-            for (int v : tempG.adj(u)) {
-                if (tempG.degree(u) == 1 || !ehPonte(tempG, u, v)) {
-                    proximoVertice = v;
+            while (it.hasNext()) {
+                int v = it.next();
+                if (tempG.degree(u) == 1) {
+                    vSelecionado = v;
+                    break; 
+                }
+                if (!ehPonte(tempG, u, v)) {
+                    vSelecionado = v;
                     break;
                 }
             }
             
-            if (proximoVertice == -1 && tempG.degree(u) > 0) {
-                proximoVertice = tempG.adj(u).iterator().next();
-            }
-
-            if (proximoVertice != -1) {
-                circuitoFinal.push(proximoVertice);
-                tempG.removeEdge(u, proximoVertice);
-                u = proximoVertice;
+            if (vSelecionado != -1) {
+                tempG.removeEdge(u, vSelecionado);
+                
+                circuitoFinal.push(vSelecionado);
+                u = vSelecionado;
             } else {
-                break;
+                break; 
             }
         }
         
         super.definirCircuito(circuitoFinal);
     }
-
     private boolean ehPonte(Graph g, int u, int v) {
+        Graph gCopy = new Graph(g);
+        
+        gCopy.removeEdge(u, v);
         int contagemOriginal = contarAlcancaveis(g, u);
         
-        g.removeEdge(u, v);
-        int contagemNova = contarAlcancaveis(g, u);
-        g.addEdge(u, v);
-
-        return contagemNova < contagemOriginal;
+        int contagemNova = contarAlcancaveis(gCopy, u);
+        return contagemNova < contagemOriginal && gCopy.degree(v) > 0;
     }
 
     private int contarAlcancaveis(Graph g, int inicio) {
         boolean[] marcado = new boolean[g.V()];
-        Queue<Integer> q = new Queue<>();
+        Queue<Integer> q = new Queue<>(); // BFS usa uma fila
+        
+        if (g.degree(inicio) == 0) return 0;
         
         q.enqueue(inicio);
         marcado[inicio] = true;
