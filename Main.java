@@ -22,11 +22,11 @@ public class Main {
             Graph G = new Graph(in);
             
             Hierholzer hierholzer = new Hierholzer(G);
+            Fleury fleury = new Fleury(G);
             
             if (hierholzer.temCircuito()) {
                 StdOut.println("Circuito Euleriano Encontrado:");
-                Fleury fleury = new Fleury(G);
-
+                
                 StdOut.print("Hierholzer: ");
                 StdOut.println(hierholzer.circuito());
                 

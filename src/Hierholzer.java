@@ -1,55 +1,51 @@
 package src;
 
-import java.util.HashSet;
+import src.Stack;
 
 public class Hierholzer extends CircuitoEuleriano {
 
     public Hierholzer(Graph G) {
         super(G);
-        
-        if (!super.temCircuito()) {
-            return;
-        }
-        
-        HashSet<Integer>[] adjSets = (HashSet<Integer>[]) new HashSet[G.V()];
 
-        for (int v = 0; v < G.V(); v++) {
-            adjSets[v] = new HashSet<Integer>();
-        }
+        if (!temCircuito()) return;
 
-        for (int v = 0; v < G.V(); v++) {
-            for (int w : G.adj(v)) {
-                adjSets[v].add(w);
-            }
-        }
+        Graph grafoCopia = new Graph(G);
+        Stack<Integer> path = new Stack<>();
+        Stack<Integer> circuitoReverso = new Stack<>();
 
-        int verticeInicial = -1;
-        for (int v = 0; v < G.V(); v++) {
-            if (G.degree(v) > 0) {
-                verticeInicial = v;
+        int vInicial = -1;
+        for (int v = 0; v < grafoCopia.V(); v++) {
+            if (grafoCopia.degree(v) > 0) {
+                vInicial = v;
                 break;
             }
         }
-        
-        Stack<Integer> caminho = new Stack<>();
-        caminho.push(verticeInicial);
-        
-        Stack<Integer> circuitoFinal = new Stack<>();
 
-        while (!caminho.isEmpty()) {
-            int u = caminho.peek();
-            
-            if (!adjSets[u].isEmpty()) {
-                int v = adjSets[u].iterator().next();
-                caminho.push(v);
-                
-                adjSets[u].remove(v);
-                adjSets[v].remove(u);
+        if (vInicial == -1) {
+            definirCircuito(new Stack<>());
+            return;
+        }
+
+        int v = vInicial;
+        path.push(v);
+
+        while (!path.isEmpty()) {
+            if (grafoCopia.degree(v) > 0) {
+                path.push(v);
+                int w = grafoCopia.adj(v).iterator().next();
+                grafoCopia.removeEdge(v, w);
+                v = w;
             } else {
-                circuitoFinal.push(caminho.pop());
+                circuitoReverso.push(v);
+                v = path.pop();
             }
         }
-        
-        super.definirCircuito(circuitoFinal);
+
+        Stack<Integer> circuito = new Stack<>();
+        while (!circuitoReverso.isEmpty()) {
+            circuito.push(circuitoReverso.pop());
+        }
+
+        definirCircuito(circuito);
     }
 }
